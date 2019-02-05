@@ -10,15 +10,19 @@
 </head>
 <body onload="init()">
     <div class="header">
-        <h1>books Shop</h1>
-        <button onclick="onAddRequest()">Add</button>
+        <h1 data-trans="page-title">books Shop</h1>
+        <button onclick="onAddRequest()" data-trans="add-btn">Add</button>
+        <select onchange="onChangeLanguage(this.value)">Change Language
+            <option value="en" selected>English</option>
+            <option value="he">Hebrew</option>
+        </select>
     </div>
     <table class="table table-striped table-dark books">
         <thead>
-            <th scope="col" value="id" onclick=onSetSortBy(this) >Id</th>
-            <th scope="col" value="title" onclick=onSetSortBy(this) >Title</th>
-            <th scope="col" value="price" onclick=onSetSortBy(this) >Price</th>
-            <th scope="col" colspan="3">Actions</th>
+            <th scope="col" value="id" data-trans="book-id" onclick=onSetSortBy(this)>Id</th>
+            <th scope="col" value="title" data-trans="book-title" onclick=onSetSortBy(this) >Title</th>
+            <th scope="col" value="price" data-trans="book-price" onclick=onSetSortBy(this) >Price</th>
+            <th scope="col" colspan="3" data-trans="book-actions">Actions</th>
         </thead>
         <tbody class="items">
 
@@ -29,33 +33,33 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Add Book</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle" data-trans="title-add-book">Add Book</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="book-title">
-                        <div class="title-label">Title:</div>  
-                        <input class="title-value" placeholder="Book Title"></input>  
+                        <div class="title-label" data-trans="added-book-title">Title:</div>  
+                        <input class="title-value"  data-trans="ph-added-book-title" placeholder="Book Title"></input>  
                     </div>
                     <div class="book-price">
-                        <div class="price-label">Price:</div>  
-                        <input class="price-value" placeholder="Set Book Price"></input>  
+                        <div class="price-label" data-trans="added-book-price">Price:</div>  
+                        <input class="price-value" data-trans="ph-added-book-price" placeholder="Set Book Price"></input>  
                     </div>
                     <div class="book-rate">
-                        <div class="rate-label">Rating:</div>  
-                        <input class="rate-value" placeholder="Rate the Book"></input>  
+                        <div class="rate-label" data-trans="added-book-rate">Rating:</div>  
+                        <input class="rate-value" data-trans="ph-added-book-rate" placeholder="Rate the Book"></input>  
                     </div>
                     <div class="book-img"></div>
                     <div class="book-desc">
-                        <div class="desc-label">Description:</div>  
-                        <input class="desc-value" placeholder="Add a short"></input>  
+                        <div class="desc-label" data-trans="added-book-desc">Description:</div>  
+                        <input class="desc-value" data-trans="ph-added-book-desc" placeholder="Add a short description"></input>  
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="save-new" data-dismiss="modal" onclick="onAddSave()">Save New Book</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="save-new" data-trans="save" data-dismiss="modal" onclick="onAddSave()">Save New Book</button>
+                    <button type="button" class="btn btn-secondary" data-trans="close" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -66,39 +70,37 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="book-price">
-                            <div class="price-label">Price:</div>  
+                            <div class="price-label" data-trans="price">Price:</div>  
                             <div class="price-value"></div>  
                         </div>
                         <div class="book-rate">
-                            <div class="rate-label">Rating:</div>  
+                            <div class="rate-label" data-trans="rating">Rating:</div>  
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <button class="btn btn-outline-secondary" type="button" onclick="onRateChange(-1)">-</button>
-                                    <div type="text" class="form-control rate-value-update" aria-label="" aria-describedby="basic-addon1">0</div>
+                                    <div type="text" class="form-control rate-value-update" aria-label="" aria-describedby="basic-addon1"></div>
                                     <button class="btn btn-outline-secondary" type="button" onclick="onRateChange(1)">+</button>
                                 </div>
                             </div>
-                            <div class="rater" onclick="onRateRequest()"></div>
                         </div>
                         <div class="book-img-container"></div>
                         <div class="book-desc">
-                            <div class="desc-label">Description:</div>  
+                            <div class="desc-label" data-trans="desc">Description:</div>  
                             <div class="desc-value"></div>  
                         </div>
                     </div>
                     <div class="modal-footer">
                         <span class="save-button-container">
-                                <button type="button" class="btn btn-dark" 
-                                data-dismiss="modal">Save changes</button>
+                                <button type="button" class="btn btn-dark" data-trans="save" data-dismiss="modal" onclick="onUpdateSave(this)">Save changes</button>
                         </span>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-trans="close" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -107,6 +109,8 @@
 
 <script src="lib/jquery/jquery.js"></script>
 <script src="lib/bootstrap/bootstrap.js"></script>
+<script src="js/util-service.js"></script>
+<script src="js/i18n-service.js"></script>
 <script src="js/storage-service.js"></script>
 <script src="js/books-controller.js"></script>
 <script src="js/books-service.js"></script>

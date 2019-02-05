@@ -1,3 +1,10 @@
+body {
+    background-color: #181a1d;
+}
+body.rtl {
+    direction: rtl;
+}
+
 h1 {
     color: red; 
 }

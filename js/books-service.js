@@ -2,7 +2,7 @@
 'use strict';
 
 var gBooks
-var gNextId = 0
+var gNextImgId = 0
 const BOOKS_KEY = 'books'
 const LOREM = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque quisquam consequatur minima, temporibus labore officia? Iure, eaque. Inventore voluptates vel aliquid corporis delectus commodi temporibus expedita, voluptatem fuga, cum incidunt?'
 
@@ -28,13 +28,15 @@ function addBooks() {
 }
 
 function createBook(title, price, rate, desc = LOREM) {
-    gNextId++
-    var book = {id: gNextId,
+    gNextImgId++
+    var book = {
+            id: makeId(4),
+            imgId: gNextImgId,
             title: title,
             price: price,
             rate: rate,
             desc: desc,
-            img: `imgs/${gNextId}.jpg`
+            img: `imgs/${gNextImgId}.jpg`
     }
     return book
 
@@ -43,7 +45,7 @@ function createBook(title, price, rate, desc = LOREM) {
 
 function getBookById(id) {
     var book = gBooks.find(function(book){
-        return book.id === +id 
+        return book.id === id 
     })
     return book
 }
@@ -70,7 +72,7 @@ function update(id, newPrice, newRate, newDesc) {
 
 function deleteBook(id) {
     var bookIdx = gBooks.findIndex(function(book){
-        return (book.id === +id)
+        return (book.id === id)
     })
     gBooks.splice(bookIdx,1)
     saveToStorage(BOOKS_KEY, gBooks)    
@@ -79,9 +81,10 @@ function deleteBook(id) {
 
 function getBooksToShow() {
     var books = gBooks.slice()
-    sortByProperty(books, gSortBy)
+    console.log(gBooks)
+    books = sortByProperty(books, gSortBy)
     //return splice() of only items to this page
-    return gBooks
+    return books
 }
 
 
@@ -92,7 +95,8 @@ function setSortBy(property) {
 
 function sortByProperty (arr, property) {  
     arr.sort(function(a,b){
-        if (property !== 'title') return gSortOrder * (a[property] - (b[property]))
+        if (property === 'price') return gSortOrder * (a[property] - (b[property]))
         else return gSortOrder * a[property].localeCompare(b[property])
     })
+    return arr
 }

@@ -5,8 +5,10 @@ const UPDATE = 'update'
 const DELETE = 'delete'
 
 function init() {
+    doTrans()
     addBooks()
     renderBooksTable()
+    
 }
 
 function renderBooksTable() {
@@ -23,13 +25,14 @@ function renderBooksTable() {
     }) 
     var strHtml = strHtmls.join('')
     $('tbody.items').html(strHtml)
+    doTrans()
 }
 
 function getActionsContainer(id) {
     var strHtml =  `<span>
-                        <button class="btn btn-outline-info" id="${id}" value="read" onclick="onRead(this)">Read</button>
-                        <button class="btn btn-outline-success" id="${id}" value="update" onclick="onUpdateRequest(this)">Update</button>
-                        <button class="btn btn-outline-danger id="${id}" value="delete" onclick="onDelete(this)">Delete</button>
+                        <button class="btn btn-outline-info" data-id="${id}" value="read" data-trans="read-btn" onclick="onRead(this)">Read</button>
+                        <button class="btn btn-outline-success" data-id="${id}" value="update" data-trans="update-btn" onclick="onUpdateRequest(this)">Update</button>
+                        <button class="btn btn-outline-danger data-id="${id}" value="delete" data-trans="delete-btn" onclick="onDelete(this)">Delete</button>
                     </span>`
     return strHtml
 }
@@ -44,20 +47,22 @@ function onAddSave() {
     var title = $('.title-value').val()
     var price = $('.price-value').val()
     var rate = $('.rate-value').val()
+    var desc = $('.desc-value').val()
     if (typeof(price) === 'number' && typeof(rate) === 'number') {
         price = +price
         rate = +rate
-    }
-    //else give warning and redo onAddRequest
-    var desc = $('.desc-value').val()
+    } //else give warning and redo onAddRequest
+    if (title === '') return 
     add (title, price, rate, desc) 
     renderBooksTable()
 }
 
 
 function onRead(elButton) {
-    var book = read(elButton.id)
+    var bookId = elButton.dataset.id
+    var book = read(bookId)
     renderDetailsModal(book)
+    
 }
 
 function renderDetailsModal(book) {
@@ -67,58 +72,69 @@ function renderDetailsModal(book) {
     // Show Price
     $readModal.find('.price-value').text(book.price)
     // Show Rating - when clicked enables Save Changes button.
-    $readModal.find('.rate-value').text(book.rate)
+    $readModal.find('.rate-value-update').text(+book.rate)
+    // Show Image:
+    $readModal.find('.book-img-container').html(`<img src="${book.img}">`)
     // Show Description
     $readModal.find('.desc-value').text(book.desc)
     // Render Save Changes button with the book id. Disabled by Defualt.
     $readModal.find('.save-button-container button').attr('disabled','disabled')
-    $readModal.find('.save-button-container button').on('click',function(){onUpdateSave(+book.id)})
-    ///this is one option. I could also render the complete button HTML and set onclick="onUpdateSave(${book.id})"
-    //in this situation i will need to render the button again in update, so i though this is better.
-    
+    $readModal.find('.save-button-container button').attr('data-id', book.id)
+
+    doTrans()
     // Show the modal
     $readModal.modal()
 }
 
 
 function onUpdateRequest(elButton) {
-    var book = getBookById(elButton.id)
+    var bookId = elButton.dataset.id
+    var book = getBookById(bookId)
     renderUpdateModal(book)
 }
 
 
 function renderUpdateModal(book) {
-
     var $updateModal = $('#read-update-modal')
     // Show update Title input:
     $updateModal.find('.modal-title').text(book.title)
     // Show update Price input:
     $updateModal.find('.price-value').html(`<input class="price-value-update" value="${book.price}"</input>`)
     // Show update Rate input:
-    $updateModal.find('.rate-value').text(+book.rate)
+    $updateModal.find('.rate-value-update').text(+book.rate)
     // Show Image:
     $updateModal.find('.book-img-container').html(`<img src="${book.img}">`)
     // Show update Description input:
     $updateModal.find('.desc-value').html(`<input class="desc-value-update" value="${book.desc}"</input>`)
     // Render save button with the book id:
     $updateModal.find('.save-button-container button').attr('disabled', false)
-    $updateModal.find('.save-button-container button').on('click',function(){onUpdateSave(+book.id)})
+    $updateModal.find('.save-button-container button').attr('data-id', book.id)
+    doTrans()
     // Show the Modal:
     $updateModal.modal()
 }
 
-function onUpdateSave(bookId) {
+function onUpdateSave(elButton) {
+    var bookId = elButton.dataset.id
+    var book = getBookById(bookId)
     var newPrice = $('.price-value-update').val()
-    if (typeof(newPrice) === 'number') newPrice = +newPrice
-    //else - give a warning and redo onUpdateRequest
-    var newRate = $('.rate-value-update').text()
     var newDesc = $('.desc-value-update').val()
+    var newRate = $('.rate-value-update').text()
+    console.log('newRate', newRate)
+    
+    if (!newDesc) newDesc = book.desc
+    
+    if (!newPrice) newPrice = book.price
+    else if (typeof(newPrice) === 'number') newPrice = +newPrice //add error at else
+    
     update(bookId, newPrice, newRate, newDesc) 
+    
     renderBooksTable()
 }
 
 function onDelete(elButton) {
-    deleteBook(elButton.id)
+    var bookId = elButton.dataset.id
+    deleteBook(bookId)
     renderBooksTable()
 }
 
@@ -138,6 +154,13 @@ function onSetSortBy(elHeader) {
     setSortBy(property)
     renderBooksTable()
     
+}
+
+function onChangeLanguage(lang) {
+    setLang(lang)
+    if (lang === 'he') document.body.classList.add('rtl')
+    else document.body.classList.remove('rtl')
+    init()
 }
 
 
