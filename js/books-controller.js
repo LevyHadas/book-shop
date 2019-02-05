@@ -99,13 +99,14 @@ function renderUpdateModal(book) {
     // Show update Title input:
     $updateModal.find('.modal-title').text(book.title)
     // Show update Price input:
-    $updateModal.find('.price-value').html(`<input class="price-value-update" value="${book.price}"</input>`)
+    $updateModal.find('.price-value').html(`<input type="text" class="price-value-update" value="${book.price}"></input>`)
     // Show update Rate input:
     $updateModal.find('.rate-value-update').text(+book.rate)
     // Show Image:
     $updateModal.find('.book-img-container').html(`<img src="${book.img}">`)
     // Show update Description input:
-    $updateModal.find('.desc-value').html(`<input class="desc-value-update" value="${book.desc}"</input>`)
+    $updateModal.find('.desc-value').html(`<input class="desc-value-update" value="${book.desc}"></input>`)
+    $updateModal.find('.desc-value').html(`<textarea cols="50" rows="3" class="desc-value-update">${book.desc}</textarea>`)
     // Render save button with the book id:
     $updateModal.find('.save-button-container button').attr('disabled', false)
     $updateModal.find('.save-button-container button').attr('data-id', book.id)
@@ -120,7 +121,7 @@ function onUpdateSave(elButton) {
     var newPrice = $('.price-value-update').val()
     var newDesc = $('.desc-value-update').val()
     var newRate = $('.rate-value-update').text()
-    console.log('newRate', newRate)
+    console.log('newRate', newDesc)
     
     if (!newDesc) newDesc = book.desc
     
