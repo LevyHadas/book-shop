@@ -1,9 +1,14 @@
 body {
     background-color: #181a1d;
+    
 }
 body.rtl {
+    unicode-bidi: bidi-override;
+    text-align:right;
     direction: rtl;
 }
+
+
 
 h1 {
     color: red; 
