@@ -6,7 +6,7 @@ const DELETE = 'delete'
 
 function init() {
     doTrans()
-    addBooks()
+    createBooks()
     renderBooksTable()
     
 }

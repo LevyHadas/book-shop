@@ -11,7 +11,7 @@ var gSortOrder = 1
 var gSortBy = 'id'
 var currPageIdx = 1
 
-function addBooks() {
+function createBooks() {
     var books = loadFromStorage(BOOKS_KEY)
     if (!books || books.length === 0) {
         var titles = ['Oh, the Places You\'ll Go!', 'Where the Wild Things Are', 
